@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:king_of_omi/map.dart';
+import 'package:king_of_omi/detail.dart';
 
 void main() {
   runApp(const MyApp());
@@ -96,12 +96,15 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const MapPage(),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: (){
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return const DetailPage(title: "小見地図");
+          }));
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
