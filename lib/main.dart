@@ -98,6 +98,31 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Expanded(
+              child: ListView(
+                children: [
+                  Text("aaa"),
+                  Text("bbb"),
+                  Text("ccc"),
+                  Text("Hello"),
+                  Card(
+                    margin: const EdgeInsets.all(10),
+                    child: Container(
+                      // margin: const EdgeInsets.all(10),
+                      width: 300,
+                      height: 100,
+                      child: ListTile(
+                        leading: Icon(Icons.people),
+                        title: Text("〇〇さんちの雪かきチャレンジ"),
+                        subtitle: Text("みんなで除雪をしてポイントをゲットしよう"),
+                        onTap: () {},
+                        isThreeLine: true,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
