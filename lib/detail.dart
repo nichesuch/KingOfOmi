@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -23,6 +24,21 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   MapController mapController = MapController();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    // ドキュメント作成
+    FirebaseFirestore.instance
+        .collection('quests') // コレクションID
+        .doc('1') // ドキュメントID
+        .get().then(
+        (doc) => {
+
+    }
+    ); // データ
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +83,16 @@ class _DetailPageState extends State<DetailPage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: "add",
+        child: Icon(Icons.add), onPressed: () {
+        LatLng now = mapController.center;
+        //ドキュメント作成
+        FirebaseFirestore.instance
+            .collection('quests') // コレクションID
+            .doc('1') // ドキュメントID
+            .set({ "tilte": "テスト", "location": {"latitude": now.latitude, "longitude": now.longitude}});
+      },),
     );
   }
 }
