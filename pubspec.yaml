@@ -43,6 +43,8 @@ dependencies:
   firebase_core: ^2.4.1
   cloud_firestore: ^4.3.1
 
+  google_fonts: ^4.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -95,3 +97,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  assets:
+    - assets/images/
