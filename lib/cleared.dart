@@ -1,30 +1,28 @@
 import 'dart:async';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:king_of_omi/cleared.dart';
 import 'package:king_of_omi/map.dart';
 import 'package:king_of_omi/quest.dart';
 import 'package:latlong2/latlong.dart';
 
-class DetailPage extends StatefulWidget {
-  const DetailPage({super.key, required this.title, required this.quest});
+class ClearedPage extends StatefulWidget {
+  const ClearedPage({super.key, required this.title, required this.quest});
   final String title;
   final Quest quest;
 
   @override
-  State<DetailPage> createState() => _DetailPageState();
+  State<ClearedPage> createState() => _ClearedPageState();
 }
 
-class _DetailPageState extends State<DetailPage> {
+class _ClearedPageState extends State<ClearedPage> {
   MapController mapController = MapController();
   bool isActive = false;
   bool canClear = false;
   double radius = 0.0001;
   late StreamSubscription streamSubscription;
-  List<Widget> carousel = [];
+  MaterialStatesController statesController = MaterialStatesController();
 
   @override
   void initState() {
@@ -33,20 +31,19 @@ class _DetailPageState extends State<DetailPage> {
 
     streamSubscription = Geolocator.getPositionStream().listen((position) {
       LatLng loc1 =
-          LatLng(position.latitude - radius, position.longitude - radius);
+      LatLng(position.latitude - radius, position.longitude - radius);
       LatLng loc2 =
-          LatLng(position.latitude + radius, position.longitude + radius);
+      LatLng(position.latitude + radius, position.longitude + radius);
       setState(() {
         canClear = LatLngBounds(loc1, loc2).contains(widget.quest.location);
+        if (canClear) {
+          print("can Clear");
+          statesController.update(MaterialState.disabled, true);
+        } else {
+          print("NO Clear");
+          statesController.update(MaterialState.focused, false);
+        }
       });
-    });
-
-    setState(() {
-      carousel.addAll(widget.quest.image);
-      carousel.add(MapView(
-          mapController: mapController,
-          showMyLocation: false,
-          location: widget.quest.location));
     });
   }
 
@@ -85,12 +82,10 @@ class _DetailPageState extends State<DetailPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              child: CarouselSlider(
-                options: CarouselOptions(
-                    viewportFraction: 1, enableInfiniteScroll: false),
-                items: carousel,
-              ),
-            ),
+                child: MapView(
+                    mapController: mapController,
+                    showMyLocation: false,
+                    location: widget.quest.location)),
             Expanded(
               child: ListView(
                 children: [
@@ -104,27 +99,18 @@ class _DetailPageState extends State<DetailPage> {
             ),
             !isActive
                 ? ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        isActive = !isActive;
-                      });
-                    },
-                    child: const Padding(
-                        padding: EdgeInsets.all(10), child: Text("挑戦")))
+                onPressed: () {
+                  setState(() {
+                    isActive = !isActive;
+                  });
+                },
+                child: const Padding(
+                    padding: EdgeInsets.all(10), child: Text("挑戦")))
                 : ElevatedButton(
-                    onPressed: !canClear
-                        ? () {
-                            if (canClear) {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(builder: (context) {
-                                return ClearedPage(
-                                    title: "クエスト達成", quest: widget.quest);
-                              }));
-                            }
-                          }
-                        : null,
-                    child: const Padding(
-                        padding: EdgeInsets.all(10), child: Text("達成")))
+                statesController: statesController,
+                onPressed: () {},
+                child: const Padding(
+                    padding: EdgeInsets.all(10), child: Text("達成")))
           ],
         ),
       ),

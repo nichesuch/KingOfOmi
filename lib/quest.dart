@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +16,7 @@ class Quest {
   DateTime endAt = DateTime(2023);
   DateTime createdAt = DateTime(2023);
   String createdUserId = "";
+  List<Image> image = [];
 
   Widget get subtitle => Row(crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -34,6 +37,9 @@ class Quest {
     description = map["description"] ?? "";
     point = int.parse(map["point"] ?? "0");
     createdAt = (map["createdAt"] as Timestamp).toDate();
+    if(map.containsKey("image")){
+      image = (map["image"] as List).map((e) => Image.memory(base64.decode(e.toString()))).toList();
+    }
     return this;
   }
 }

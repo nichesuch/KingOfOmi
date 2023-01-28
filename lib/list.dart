@@ -72,7 +72,7 @@ class _ListPageState extends State<ListPage> {
                           (e) => Card(
                         margin: const EdgeInsets.all(10),
                         child: ListTile(
-                          leading: Icon(Icons.people),
+                          leading: e.image.isEmpty ? const Icon(Icons.people) : e.image.first,
                           title: Text(e.title),
                           subtitle: e.subtitle,
                           onTap: () {
