@@ -24,7 +24,9 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   MapController mapController = MapController();
-  TextEditingController textController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController pointController = TextEditingController();
   bool showMyLocation = false;
   String dataTitle = "";
 
@@ -96,11 +98,28 @@ class _EditPageState extends State<EditPage> {
               child: ListView(
                 children: [
                   TextField(
-                    controller: textController,
+                    controller: titleController,
                     decoration: InputDecoration(
                       labelText: "クエスト名",
                       hintText: 'Enter a search term',
                     ),
+                  ),
+                  TextField(
+                    controller: pointController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: "獲得ポイント",
+                      hintText: 'Enter a search term',
+                    ),
+                  ),
+                  TextField(
+                    controller: descriptionController,
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                      labelText: "クエスト詳細",
+                      hintText: 'Enter a search term',
+                    ),
+                      maxLines: 10
                   ),
                 ],
               ),
@@ -117,8 +136,11 @@ class _EditPageState extends State<EditPage> {
           FirebaseFirestore.instance
               .collection('quests') // コレクションID
               .add({
-            "title": textController.text,
-            "location": {"latitude": now.latitude, "longitude": now.longitude}
+            "title": titleController.text,
+            "point": pointController.text,
+            "description": descriptionController.text,
+            "location": {"latitude": now.latitude, "longitude": now.longitude},
+            "createdAt": DateTime.now()
           }).then((value) => Navigator.of(context).pop());
         },
       ),

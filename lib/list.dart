@@ -29,15 +29,19 @@ class _ListPageState extends State<ListPage> {
 
   Iterable<Quest> list = [];
 
-  @override
-  void initState() {
-    FirebaseFirestore.instance.collection("quests").get().then((quests) {
+  refresh(){
+    FirebaseFirestore.instance.collection("quests").orderBy('createdAt', descending: true).get().then((quests) {
       setState(() {
         list = quests.docs.map<Quest>((e) {
           return Quest().fromMap(e.id, e.data());
         });
       });
     });
+  }
+
+  @override
+  void initState() {
+    refresh();
     super.initState();
   }
 
@@ -70,22 +74,13 @@ class _ListPageState extends State<ListPage> {
                         child: ListTile(
                           leading: Icon(Icons.people),
                           title: Text(e.title),
-                          subtitle: Text("みんなで除雪をしてポイントをゲットしよう"),
+                          subtitle: e.subtitle,
                           onTap: () {
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (context) {
                               return DetailPage(title: "クエスト詳細", quest: e);
                             })).then((e) {
-                              FirebaseFirestore.instance
-                                  .collection("quests")
-                                  .get()
-                                  .then((quests) {
-                                setState(() {
-                                  list = quests.docs.map<Quest>((e) {
-                                    return Quest().fromMap(e.id, e.data());
-                                  });
-                                });
-                              });
+                              refresh();
                             });
                           },
                           isThreeLine: true,
@@ -100,16 +95,7 @@ class _ListPageState extends State<ListPage> {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return const EditPage(title: "クエスト登録");
             })).then((e) {
-              FirebaseFirestore.instance
-                  .collection("quests")
-                  .get()
-                  .then((quests) {
-                setState(() {
-                  list = quests.docs.map<Quest>((e) {
-                    return Quest().fromMap(e.id, e.data());
-                  });
-                });
-              });
+              refresh();
             });
           },
           tooltip: 'Increment',

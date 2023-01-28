@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:king_of_omi/detail.dart';
-import 'package:king_of_omi/quest.dart';
+import 'package:king_of_omi/point.dart';
 
 import 'edit.dart';
 import 'list.dart';
@@ -11,6 +10,7 @@ import 'list.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await initializeDateFormatting('ja_JP');
   runApp(const MyApp());
 }
 
@@ -60,8 +60,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static const _screens = [
-    EditPage(title: "追加",),
     ListPage(title: "一覧"),
+    ListPage(title: "一覧"),
+    PointPage(title: "アカウント"),
+    PointPage(title: "アカウント"),
+    PointPage(title: "アカウント"),
   ];
 
   int _selectedIndex = 0;
@@ -83,8 +86,9 @@ class _MyHomePageState extends State<MyHomePage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ホーム'),
           BottomNavigationBarItem(icon: Icon(Icons.list), label: '一覧'),
+          BottomNavigationBarItem(icon: Icon(Icons.image), label: '実施中'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.notifications), label: 'お知らせ'),
+              icon: Icon(Icons.star), label: 'ランキング'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'アカウント'),
         ],
         type: BottomNavigationBarType.fixed,

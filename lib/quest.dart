@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:latlong2/latlong.dart';
 
 class Quest {
@@ -12,11 +15,25 @@ class Quest {
   DateTime createdAt = DateTime(2023);
   String createdUserId = "";
 
+  Widget get subtitle => Row(crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Padding(padding: EdgeInsets.only(right: 10),
+        child:     Text("${point}p", style: const TextStyle(fontSize: 20),),
+        ),
+        Padding(padding: EdgeInsets.only(right: 10),
+          child:        Text(DateFormat.yMMMMd('ja').format(createdAt)),
+        ),
+    Expanded(child: Text(description, overflow: TextOverflow.ellipsis, maxLines: 1),)
+  ]);
+
   Quest fromMap(String id, Map<String, dynamic> map) {
     this.id = id;
-    title = map["title"];
+    title = map["title"] ?? "";
     location =
-        LatLng(map["location"]["latitude"], map["location"]["longitude"]);
+        LatLng(map["location"]["latitude"] ?? 0, map["location"]["longitude"] ?? 0);
+    description = map["description"] ?? "";
+    point = int.parse(map["point"] ?? "0");
+    createdAt = (map["createdAt"] as Timestamp).toDate();
     return this;
   }
 }

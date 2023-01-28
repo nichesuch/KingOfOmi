@@ -27,7 +27,7 @@ class _DetailPageState extends State<DetailPage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.quest.title),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -57,10 +57,18 @@ class _DetailPageState extends State<DetailPage> {
             Expanded(
               child: ListView(
                 children: [
-                  Text(widget.quest.title),
+                  const Text("クエスト詳細"),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(widget.quest.description),
+                  )
                 ],
               ),
-            )
+            ),
+            ElevatedButton(
+                onPressed: () {},
+                child: const Padding(
+                    padding: EdgeInsets.all(10), child: Text("挑戦")))
           ],
         ),
       ),
