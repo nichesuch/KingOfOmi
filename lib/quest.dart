@@ -15,7 +15,7 @@ class Quest {
   DateTime startAt = DateTime(2023);
   DateTime endAt = DateTime(2023);
   DateTime createdAt = DateTime(2023);
-  String createdUserId = "";
+  String createdUser = "";
   List<Image> image = [];
   List<Widget> sumbnail = [];
 
@@ -38,8 +38,9 @@ class Quest {
     description = map["description"] ?? "";
     point = int.parse(map["point"] ?? "0");
     createdAt = (map["createdAt"] as Timestamp).toDate();
+    createdUser = map["createdUser"] ?? "";
     if(map.containsKey("image")){
-      image = (map["image"] as List).map((e) => Image.memory(base64.decode(e.toString()))).toList();
+      image = (map["image"] as List).map((e) => Image.memory(base64.decode(e.toString()), fit: BoxFit.cover)).toList();
       sumbnail = (map["image"] as List).map((e) =>
       Container(
           width: 100, height: 100,
