@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:king_of_omi/map.dart';
-import 'package:king_of_omi/quest.dart';
 import 'package:latlong2/latlong.dart';
 
-class DetailPage extends StatefulWidget {
-  const DetailPage({super.key, required this.title, required this.quest});
+class EditPage extends StatefulWidget {
+  const EditPage({super.key, required this.title, this.id});
   final String title;
-  final Quest quest;
+  final String? id;
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -19,16 +19,42 @@ class DetailPage extends StatefulWidget {
   // always marked "final".
 
   @override
-  State<DetailPage> createState() => _DetailPageState();
+  State<EditPage> createState() => _EditPageState();
 }
 
-class _DetailPageState extends State<DetailPage> {
+class _EditPageState extends State<EditPage> {
   MapController mapController = MapController();
+  TextEditingController textController = TextEditingController();
+  bool showMyLocation = false;
+  String dataTitle = "";
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    // ドキュメント作成
+    Map<String, dynamic>? docdata;
+
+    if(widget.id != null) {
+      FirebaseFirestore.instance
+          .collection('quests') // コレクションID
+          .doc(widget.id) // ドキュメントID
+          .get().then(
+              (doc) {
+            docdata = doc.data();
+            print(docdata);
+            if(docdata == null) return;
+
+            setState(() {
+              dataTitle = docdata!["title"];
+              mapController.move(LatLng(docdata!["location"]["latitude"], docdata!["location"]["longitude"]), 16);
+            });
+          }); // データ
+    }else{
+      setState(() {
+        showMyLocation = true;
+      });
+    }
   }
 
   @override
@@ -61,17 +87,33 @@ class _DetailPageState extends State<DetailPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-                child: MapView(mapController: mapController, showMyLocation: false, location: widget.quest.location)),
+                child: MapView(mapController: mapController, showMyLocation: showMyLocation)),
             Expanded(
               child: ListView(
                 children: [
-                  Text(widget.quest.title),
+                  TextField(
+                    controller: textController,
+                    decoration: InputDecoration(
+                      labelText: "クエスト名",
+                      hintText: 'Enter a search term',
+                    ),
+                  ),
                 ],
               ),
             )
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: "add",
+        child: Icon(Icons.add), onPressed: () {
+        LatLng now = mapController.center;
+        //ドキュメント作成
+        FirebaseFirestore.instance
+            .collection('quests') // コレクションID
+        .add({ "title": textController.text, "location": {"latitude": now.latitude, "longitude": now.longitude}})
+            .then((value) => Navigator.of(context).pop());
+      },),
     );
   }
 }

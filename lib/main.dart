@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:king_of_omi/detail.dart';
+import 'package:king_of_omi/quest.dart';
+
+import 'edit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,6 +69,20 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Iterable<Quest> list = [];
+
+  @override
+  void initState() {
+    FirebaseFirestore.instance.collection("quests").get().then((quests){
+      setState(() {
+        list = quests.docs.map<Quest>((e){
+          return Quest().fromMap(e.id, e.data());
+        });
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -101,27 +119,26 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Expanded(
               child: ListView(
-                children: [
-                  Text("aaa"),
-                  Text("bbb"),
-                  Text("ccc"),
-                  Text("Hello"),
-                  Card(
-                    margin: const EdgeInsets.all(10),
-                    child: Container(
-                      // margin: const EdgeInsets.all(10),
-                      width: 300,
-                      height: 100,
-                      child: ListTile(
-                        leading: Icon(Icons.people),
-                        title: Text("〇〇さんちの雪かきチャレンジ"),
-                        subtitle: Text("みんなで除雪をしてポイントをゲットしよう"),
-                        onTap: () {},
-                        isThreeLine: true,
-                      ),
-                    ),
-                  ),
-                ],
+                children: list.map<Widget>((e) =>                Card(
+            margin: const EdgeInsets.all(10),
+        child: Container(
+          // margin: const EdgeInsets.all(10),
+          width: 300,
+          height: 100,
+          child: ListTile(
+            leading: Icon(Icons.people),
+            title: Text(e.title),
+            subtitle: Text("みんなで除雪をしてポイントをゲットしよう"),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return DetailPage(title: "クエスト詳細", quest: e);
+              }));
+            },
+            isThreeLine: true,
+          ),
+        ),
+      ),
+                ).toList()
               ),
             )
           ],
@@ -130,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return const DetailPage(title: "小見地図");
+            return const EditPage(title: "クエスト登録");
           }));
         },
         tooltip: 'Increment',

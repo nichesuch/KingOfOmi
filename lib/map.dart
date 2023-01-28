@@ -4,10 +4,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapView extends StatefulWidget {
-  MapView({super.key, this.mapController, this.showMyLocation = true});
+  MapView({super.key, this.mapController, this.showMyLocation = true, this.location});
 
   MapController? mapController;
   bool showMyLocation;
+  LatLng? location;
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -82,8 +83,8 @@ class _MapViewState extends State<MapView> {
         child: FlutterMap(
           mapController: widget.mapController,
           options: MapOptions(
-        center: LatLng(36.569537, 137.383705),
-        zoom: 12,
+        center: widget.location ?? LatLng(36.569537, 137.383705),
+        zoom: 16,
       ),
       nonRotatedChildren: [
         AttributionWidget.defaultWidget(
