@@ -73,7 +73,8 @@ class _MapViewState extends State<MapView> {
     _init();
     return Center(
         child: FlutterMap(
-      options: MapOptions(
+          mapController: mapController,
+          options: MapOptions(
         center: LatLng(36.569537, 137.383705),
         zoom: 12,
       ),
@@ -82,6 +83,13 @@ class _MapViewState extends State<MapView> {
           source: 'OpenStreetMap contributors',
           onSourceTapped: null,
         ),
+        FloatingActionButton(
+            mini: true,
+            child: const Icon(Icons.my_location),
+            onPressed: () {
+              _determinePosition().then((value) => mapController.move(
+                  LatLng(value.latitude, value.longitude), 16));
+            })
       ],
       children: [
         TileLayer(
