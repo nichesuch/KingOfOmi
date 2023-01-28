@@ -4,7 +4,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapView extends StatefulWidget {
-  const MapView({super.key});
+  MapView({super.key, this.mapController, this.showMyLocation = true});
+
+  MapController? mapController;
+  bool showMyLocation;
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -20,7 +23,6 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
-  MapController mapController = MapController();
 
   /// Determine the current position of the device.
   ///
@@ -63,17 +65,22 @@ class _MapViewState extends State<MapView> {
     return await Geolocator.getCurrentPosition();
   }
 
-  _init() {
-    _determinePosition().then((value) =>
-        mapController.move(LatLng(value.latitude, value.longitude), 16));
+  @override
+  initState() {
+    super.initState();
+    widget.mapController ??= MapController();
+    if(widget.showMyLocation) {
+      _determinePosition().then((value) =>
+          widget.mapController?.move(
+              LatLng(value.latitude, value.longitude), 16));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _init();
     return Center(
         child: FlutterMap(
-          mapController: mapController,
+          mapController: widget.mapController,
           options: MapOptions(
         center: LatLng(36.569537, 137.383705),
         zoom: 12,
@@ -84,10 +91,11 @@ class _MapViewState extends State<MapView> {
           onSourceTapped: null,
         ),
         FloatingActionButton(
+            heroTag: "myLocation",
             mini: true,
             child: const Icon(Icons.my_location),
             onPressed: () {
-              _determinePosition().then((value) => mapController.move(
+              _determinePosition().then((value) => widget.mapController?.move(
                   LatLng(value.latitude, value.longitude), 16));
             })
       ],

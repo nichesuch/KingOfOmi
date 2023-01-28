@@ -21,6 +21,7 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  MapController mapController = MapController();
 
 
   @override
@@ -53,7 +54,7 @@ class _DetailPageState extends State<DetailPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-                child: MapView()),
+                child: MapView(mapController: mapController)),
             Expanded(
               child: ListView(
                 children: [
