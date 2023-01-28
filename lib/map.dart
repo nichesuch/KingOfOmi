@@ -4,7 +4,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapView extends StatefulWidget {
-  MapView({super.key, this.mapController, this.showMyLocation = true, this.location});
+  MapView(
+      {super.key,
+      this.mapController,
+      this.showMyLocation = true,
+      this.location});
 
   MapController? mapController;
   bool showMyLocation;
@@ -24,7 +28,6 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
-
   /// Determine the current position of the device.
   ///
   /// When the location services are not enabled or permissions
@@ -70,10 +73,9 @@ class _MapViewState extends State<MapView> {
   initState() {
     super.initState();
     widget.mapController ??= MapController();
-    if(widget.showMyLocation) {
-      _determinePosition().then((value) =>
-          widget.mapController?.move(
-              LatLng(value.latitude, value.longitude), 16));
+    if (widget.showMyLocation) {
+      _determinePosition().then((value) => widget.mapController
+          ?.move(LatLng(value.latitude, value.longitude), 16));
     }
   }
 
@@ -81,8 +83,8 @@ class _MapViewState extends State<MapView> {
   Widget build(BuildContext context) {
     return Center(
         child: FlutterMap(
-          mapController: widget.mapController,
-          options: MapOptions(
+      mapController: widget.mapController,
+      options: MapOptions(
         center: widget.location ?? LatLng(36.569537, 137.383705),
         zoom: 16,
       ),
@@ -96,8 +98,8 @@ class _MapViewState extends State<MapView> {
             mini: true,
             child: const Icon(Icons.my_location),
             onPressed: () {
-              _determinePosition().then((value) => widget.mapController?.move(
-                  LatLng(value.latitude, value.longitude), 16));
+              _determinePosition().then((value) => widget.mapController
+                  ?.move(LatLng(value.latitude, value.longitude), 16));
             })
       ],
       children: [

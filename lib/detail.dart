@@ -33,7 +33,6 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -61,7 +60,10 @@ class _DetailPageState extends State<DetailPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-                child: MapView(mapController: mapController, showMyLocation: false, location: widget.quest.location)),
+                child: MapView(
+                    mapController: mapController,
+                    showMyLocation: false,
+                    location: widget.quest.location)),
             Expanded(
               child: ListView(
                 children: [

@@ -35,22 +35,25 @@ class _EditPageState extends State<EditPage> {
     // ドキュメント作成
     Map<String, dynamic>? docdata;
 
-    if(widget.id != null) {
+    if (widget.id != null) {
       FirebaseFirestore.instance
           .collection('quests') // コレクションID
           .doc(widget.id) // ドキュメントID
-          .get().then(
-              (doc) {
-            docdata = doc.data();
-            print(docdata);
-            if(docdata == null) return;
+          .get()
+          .then((doc) {
+        docdata = doc.data();
+        print(docdata);
+        if (docdata == null) return;
 
-            setState(() {
-              dataTitle = docdata!["title"];
-              mapController.move(LatLng(docdata!["location"]["latitude"], docdata!["location"]["longitude"]), 16);
-            });
-          }); // データ
-    }else{
+        setState(() {
+          dataTitle = docdata!["title"];
+          mapController.move(
+              LatLng(docdata!["location"]["latitude"],
+                  docdata!["location"]["longitude"]),
+              16);
+        });
+      }); // データ
+    } else {
       setState(() {
         showMyLocation = true;
       });
@@ -59,7 +62,6 @@ class _EditPageState extends State<EditPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -87,7 +89,9 @@ class _EditPageState extends State<EditPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-                child: MapView(mapController: mapController, showMyLocation: showMyLocation)),
+                child: MapView(
+                    mapController: mapController,
+                    showMyLocation: showMyLocation)),
             Expanded(
               child: ListView(
                 children: [
@@ -106,14 +110,18 @@ class _EditPageState extends State<EditPage> {
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: "add",
-        child: Icon(Icons.add), onPressed: () {
-        LatLng now = mapController.center;
-        //ドキュメント作成
-        FirebaseFirestore.instance
-            .collection('quests') // コレクションID
-        .add({ "title": textController.text, "location": {"latitude": now.latitude, "longitude": now.longitude}})
-            .then((value) => Navigator.of(context).pop());
-      },),
+        child: Icon(Icons.add),
+        onPressed: () {
+          LatLng now = mapController.center;
+          //ドキュメント作成
+          FirebaseFirestore.instance
+              .collection('quests') // コレクションID
+              .add({
+            "title": textController.text,
+            "location": {"latitude": now.latitude, "longitude": now.longitude}
+          }).then((value) => Navigator.of(context).pop());
+        },
+      ),
     );
   }
 }

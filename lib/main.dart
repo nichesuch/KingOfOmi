@@ -73,9 +73,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    FirebaseFirestore.instance.collection("quests").get().then((quests){
+    FirebaseFirestore.instance.collection("quests").get().then((quests) {
       setState(() {
-        list = quests.docs.map<Quest>((e){
+        list = quests.docs.map<Quest>((e) {
           return Quest().fromMap(e.id, e.data());
         });
       });
@@ -119,28 +119,31 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Expanded(
               child: ListView(
-                children: list.map<Widget>((e) =>                Card(
-            margin: const EdgeInsets.all(10),
-        child: ListTile(
-            leading: Icon(Icons.people),
-            title: Text(e.title),
-            subtitle: Text("みんなで除雪をしてポイントをゲットしよう"),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return DetailPage(title: "クエスト詳細", quest: e);
-              }));
-            },
-            isThreeLine: true,
-        ),
-      ),
-                ).toList()
-              ),
+                  children: list
+                      .map<Widget>(
+                        (e) => Card(
+                          margin: const EdgeInsets.all(10),
+                          child: ListTile(
+                            leading: Icon(Icons.people),
+                            title: Text(e.title),
+                            subtitle: Text("みんなで除雪をしてポイントをゲットしよう"),
+                            onTap: () {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context) {
+                                return DetailPage(title: "クエスト詳細", quest: e);
+                              }));
+                            },
+                            isThreeLine: true,
+                          ),
+                        ),
+                      )
+                      .toList()),
             )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
+        onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return const EditPage(title: "クエスト登録");
           }));
