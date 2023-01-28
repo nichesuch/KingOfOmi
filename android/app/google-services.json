@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "475711326780",
+    "project_id": "king-of-omi",
+    "storage_bucket": "king-of-omi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475711326780:android:f00a167e12154726f3d139",
+        "android_client_info": {
+          "package_name": "org.code4sake.king_of_omi.king_of_omi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "475711326780-tto46v4qgarrqscq6fev1imrp86fliv0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiVLhKRCaZ4C-apOaCcWg-a51SNK-xSkU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "475711326780-tto46v4qgarrqscq6fev1imrp86fliv0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
