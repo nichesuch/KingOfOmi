@@ -4,8 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:king_of_omi/point.dart';
+import 'package:king_of_omi/ranking.dart';
 
 import 'edit.dart';
+import 'home.dart';
 import 'list.dart';
 
 void main() async {
@@ -17,6 +19,22 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  static const MaterialColor customSwatch = MaterialColor(
+    0xFFF2A93C,
+    <int, Color>{
+      50: const Color(0xFFffffff),
+      100: const Color(0xFFfff5ec),
+      200: const Color(0xFFffebd5),
+      300: const Color(0xFFffddb5),
+      400: const Color(0xFFffcf93),
+      500: const Color(0xFFffc16c),
+      600: const Color(0xFFF2A93C),
+      700: const Color(0xFFeaa235),
+      800: const Color(0xFFde982b),
+      900: const Color(0xFFd18d20),
+    },
+  );
 
   // This widget is the root of your application.
   @override
@@ -34,15 +52,16 @@ class MyApp extends StatelessWidget {
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
           textTheme: GoogleFonts.sawarabiGothicTextTheme(),
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.orange)
-              .copyWith(background: Colors.orange[200])),
-      home: const MyHomePage(title: 'キング・オブ・小見'),
+          primarySwatch: customSwatch,
+          scaffoldBackgroundColor: Colors.orange[50],
+      ),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  MyHomePage({super.key, this.selectedIndex = 0});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -53,22 +72,24 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  final int selectedIndex;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static const _screens = [
-    ListPage(title: "一覧"),
-    ListPage(title: "一覧"),
-    PointPage(title: "アカウント"),
-    PointPage(title: "アカウント"),
-    PointPage(title: "アカウント"),
-  ];
+  Function()? onPressed = (){};
 
   int _selectedIndex = 0;
+
+  static final List<Widget> _screens = [
+    const HomePage(title: "キングオブ小見"),
+    ListPage(title: "クエスト一覧"),
+    RankingPage(title: "ランキング"),
+    PointPage(title: "アカウント"),
+    EditPage(title: "クエスト登録"),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -76,10 +97,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.selectedIndex;
     _determinePosition();
   }
 
@@ -120,23 +141,90 @@ class _MyHomePageState extends State<MyHomePage> {
     return await Geolocator.getCurrentPosition();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ホーム'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: '一覧'),
-          BottomNavigationBarItem(icon: Icon(Icons.image), label: '実施中'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.star), label: 'ランキング'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'アカウント'),
-        ],
-        type: BottomNavigationBarType.fixed,
-      ));// This trailing comma makes auto-formatting nicer for build methods.
+        body: _screens[_selectedIndex],
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return const EditPage(title: "クエスト登録");
+            })).then((e) {
+//              refresh();
+            });
+          },
+          child: const Icon(Icons.add),
+        ),
+        bottomNavigationBar: BottomAppBar(
+            color: Colors.white,
+            shape: const AutomaticNotchedShape(
+              RoundedRectangleBorder(),
+              StadiumBorder(
+                side: BorderSide(),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(
+                      Icons.home,
+                      color: _selectedIndex == 0 ? Theme.of(context).colorScheme.primary : Colors.black45,
+                    ),
+                    onPressed: () {
+                      _onItemTapped(0);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.list,
+                      color: _selectedIndex == 1 ? Theme.of(context).colorScheme.primary : Colors.black45,
+                    ),
+                    onPressed: () {
+                      _onItemTapped(1);
+                    },
+                  ),
+                  Container(height: 30,width: 50,),
+                  IconButton(
+                    icon: Icon(
+                      Icons.star,
+                      color: _selectedIndex == 2 ? Theme.of(context).colorScheme.primary : Colors.black45,
+                    ),
+                    onPressed: () {
+                      _onItemTapped(2);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.person,
+                      color: _selectedIndex == 3 ? Theme.of(context).colorScheme.primary : Colors.black45,
+                    ),
+                    onPressed: () {
+                      _onItemTapped(3);
+                    },
+                  ),
+                ],
+              ),
+            ))
+
+        // BottomNavigationBar(
+        //   currentIndex: _selectedIndex,
+        //   onTap: _onItemTapped,
+        //   items: const <BottomNavigationBarItem>[
+        //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ホーム'),
+        //     BottomNavigationBarItem(icon: Icon(Icons.list), label: '一覧'),
+        //     BottomNavigationBarItem(icon: Icon(Icons.add), label: '追加'),
+        //     BottomNavigationBarItem(
+        //         icon: Icon(Icons.star), label: 'ランキング'),
+        //     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'アカウント'),
+        //   ],
+        //   type: BottomNavigationBarType.fixed,
+        //
+        // )
+        ); // This trailing comma makes auto-formatting nicer for build methods.
   }
 }

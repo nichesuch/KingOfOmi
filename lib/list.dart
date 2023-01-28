@@ -8,7 +8,7 @@ import 'package:king_of_omi/quest.dart';
 import 'edit.dart';
 
 class ListPage extends StatefulWidget {
-  const ListPage({super.key, required this.title});
+  ListPage({super.key, required this.title, this.onPressed});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -20,6 +20,7 @@ class ListPage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  Function()? onPressed;
 
   @override
   State<ListPage> createState() => _ListPageState();
@@ -69,12 +70,26 @@ class _ListPageState extends State<ListPage> {
                 Column(
                     children: list
                         .map<Widget>(
-                          (e) => Card(
-                        margin: const EdgeInsets.all(10),
-                        child: ListTile(
-                          leading: e.image.isEmpty ? const Icon(Icons.people) : e.image.first,
-                          title: Text(e.title),
-                          subtitle: e.subtitle,
+                          (e) =>
+                         ListTile(
+                           title: Card(
+                             margin: const EdgeInsets.all(10),
+                            child: Stack(children: [
+                              Padding(
+                                  padding: EdgeInsets.all(10),
+                            child:
+                            e.sumbnail.isEmpty ? const Icon(Icons.people) : e.sumbnail.first),
+                            Padding(padding: const EdgeInsets.only(left: 120),
+                            child:
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                              Text(e.title, style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.orange),),
+                              e.subtitle,
+                            ])),
+
+                          ])
+                           ),
                           onTap: () {
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (context) {
@@ -83,24 +98,10 @@ class _ListPageState extends State<ListPage> {
                               refresh();
                             });
                           },
-                          isThreeLine: true,
-                        ),
-                      ),
+                        ) )                       .toList(),
                     )
-                        .toList())
               ],
             )),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const EditPage(title: "クエスト登録");
-            })).then((e) {
-              refresh();
-            });
-          },
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
-        )
     );
   }
 }

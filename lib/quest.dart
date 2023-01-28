@@ -17,6 +17,7 @@ class Quest {
   DateTime createdAt = DateTime(2023);
   String createdUserId = "";
   List<Image> image = [];
+  List<Widget> sumbnail = [];
 
   Widget get subtitle => Row(crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -39,6 +40,12 @@ class Quest {
     createdAt = (map["createdAt"] as Timestamp).toDate();
     if(map.containsKey("image")){
       image = (map["image"] as List).map((e) => Image.memory(base64.decode(e.toString()))).toList();
+      sumbnail = (map["image"] as List).map((e) =>
+      Container(
+          width: 100, height: 100,
+          child:  ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+          child: Image.memory(base64.decode(e.toString()), fit: BoxFit.cover)))).toList();
     }
     return this;
   }
