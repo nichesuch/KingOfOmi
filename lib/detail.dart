@@ -23,6 +23,7 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   MapController mapController = MapController();
+  String dataTitle = "";
 
   @override
   void initState() {
@@ -30,12 +31,20 @@ class _DetailPageState extends State<DetailPage> {
     super.initState();
 
     // ドキュメント作成
+    Map<String, dynamic>? docdata;
     FirebaseFirestore.instance
         .collection('quests') // コレクションID
         .doc('1') // ドキュメントID
         .get().then(
-        (doc) => {
+        (doc) {
+          docdata = doc.data();
+          print(docdata);
+          if(docdata == null) return;
 
+          setState(() {
+            dataTitle = docdata!["title"];
+            mapController.move(LatLng(docdata!["location"]["latitude"], docdata!["location"]["longitude"]), 16);
+          });
     }
     ); // データ
   }
@@ -70,13 +79,11 @@ class _DetailPageState extends State<DetailPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-                child: MapView(mapController: mapController)),
+                child: MapView(mapController: mapController, showMyLocation: false)),
             Expanded(
               child: ListView(
                 children: [
-                  Text("aaa"),
-                  Text("bbb"),
-                  Text("ccc"),
+                  Text(dataTitle),
                 ],
               ),
             )
@@ -91,7 +98,7 @@ class _DetailPageState extends State<DetailPage> {
         FirebaseFirestore.instance
             .collection('quests') // コレクションID
             .doc('1') // ドキュメントID
-            .set({ "tilte": "テスト", "location": {"latitude": now.latitude, "longitude": now.longitude}});
+            .set({ "title": "テスト", "location": {"latitude": now.latitude, "longitude": now.longitude}});
       },),
     );
   }

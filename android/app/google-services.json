@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:475711326780:android:6af55502c94d4338f3d139",
+        "mobilesdk_app_id": "1:475711326780:android:f00a167e12154726f3d139",
         "android_client_info": {
-          "package_name": "org.code4sake.king_of_omi"
+          "package_name": "org.code4sake.king_of_omi.king_of_omi"
         }
       },
       "oauth_client": [

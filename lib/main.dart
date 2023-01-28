@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:king_of_omi/detail.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
