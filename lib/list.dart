@@ -27,11 +27,14 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-
   Iterable<Quest> list = [];
 
-  refresh(){
-    FirebaseFirestore.instance.collection("quests").orderBy('createdAt', descending: true).get().then((quests) {
+  refresh() {
+    FirebaseFirestore.instance
+        .collection("quests")
+        .orderBy('createdAt', descending: true)
+        .get()
+        .then((quests) {
       setState(() {
         list = quests.docs.map<Quest>((e) {
           return Quest().fromMap(e.id, e.data());
@@ -48,60 +51,92 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-        appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Text(widget.title,
-              style: const TextStyle(fontWeight: FontWeight.bold)),
-        ),
-        body: Center(
-            child: ListView(
-              children: [
-                SizedBox(
-                  height: 150,
-                  child: Image.asset("assets/images/map.png"),
-                ),
-                SizedBox(
-                  height: 100,
-                  child: Image.asset("assets/images/logo.png"),
-                ),
-                Column(
+      body: Center(
+          child: Column(
+        children: [
+          SizedBox(
+            height: 150,
+            child: Image.asset("assets/images/map.png"),
+          ),
+          SizedBox(
+              height: 150,
+              child: Stack(
+                fit: StackFit.expand,
+                alignment: AlignmentDirectional.bottomCenter,
+                children: [
+                  Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        color: Theme.of(context).colorScheme.primary,
+                        height: 80,
+                      )),
+                  Container(
+                    padding: const EdgeInsets.all(10).copyWith(bottom: 50),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        shape: BoxShape.circle),
+                    height: 120,
+                    child: Image.asset("assets/images/logo.png"),
+                  ),
+                  Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        color: Theme.of(context).colorScheme.primary,
+                        height: 60,
+                        child: Image.asset("assets/images/quest_list.png"),
+                      )),
+                ],
+              )),
+          Expanded(child:
+          Container(
+                  color: Theme.of(context).colorScheme.primary,
+                  child: ListView(
                     children: list
-                        .map<Widget>(
-                          (e) =>
-                         ListTile(
-                           title: Card(
-                             margin: const EdgeInsets.all(10),
-                            child: Stack(children: [
-                              Padding(
-                                  padding: EdgeInsets.all(10),
-                            child:
-                            e.sumbnail.isEmpty ? const Icon(Icons.people) : e.sumbnail.first),
-                            Padding(padding: const EdgeInsets.only(left: 120),
-                            child:
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                              Text(e.title, style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.orange),),
-                              e.subtitle,
-                            ])),
-
-                          ])
-                           ),
-                          onTap: () {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return DetailPage(title: "クエスト詳細", quest: e);
-                            })).then((e) {
-                              refresh();
-                            });
-                          },
-                        ) )                       .toList(),
-                    )
-              ],
-            )),
+                        .map<Widget>((e) => ListTile(
+                              title: Card(
+                                  margin: const EdgeInsets.all(5).copyWith(top: 0),
+                                  child: Stack(children: [
+                                    Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: e.sumbnail.isEmpty
+                                            ? const Icon(Icons.people)
+                                            : e.sumbnail.first),
+                                    Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 120),
+                                        child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                e.title,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headlineSmall
+                                                    ?.copyWith(
+                                                        color: Colors.orange),
+                                              ),
+                                              e.subtitle,
+                                            ])),
+                                  ])),
+                              onTap: () {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
+                                  return DetailPage(title: "クエスト詳細", quest: e);
+                                })).then((e) {
+                                  refresh();
+                                });
+                              },
+                            ))
+                        .toList(),
+                  )))
+        ],
+      )),
     );
   }
 }
