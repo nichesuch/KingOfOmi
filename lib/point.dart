@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:king_of_omi/detail.dart';
 import 'package:king_of_omi/quest.dart';
+import 'package:king_of_omi/rank.dart';
 
 import 'edit.dart';
 
@@ -27,15 +28,13 @@ class PointPage extends StatefulWidget {
 
 class _PointPageState extends State<PointPage> {
 
-  int point = 0;
-  String name = "";
+  Rank? rank;
 
   @override
   void initState() {
     FirebaseFirestore.instance.collection("points").doc("ceMFj61EBSe3S77F7WBk").get().then((data) {
       setState(() {
-        point = data.data()!["point"];
-        name = data.data()!["user"];
+        rank = Rank().fromMap(data.id, data.data()!);
       });
     });
     super.initState();
@@ -51,8 +50,141 @@ class _PointPageState extends State<PointPage> {
           title: Text(widget.title,
               style: const TextStyle(fontWeight: FontWeight.bold)),
         ),
-        body: Center(
-            child: Text("$pointポイント", style: Theme.of(context).textTheme.headlineLarge,)
+        body: Column(
+            children:[
+              Padding(padding: EdgeInsets.all(10)),
+              ElevatedButton(
+                child: Padding(padding:EdgeInsets.all(10), child: const Icon(Icons.person_outlined, size: 60,)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape:  CircleBorder(
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 1,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                ),
+                onPressed: () {},
+              ),
+              Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(width: 1.0, color: Colors.black26),
+                    bottom: BorderSide(width: 1.0, color: Colors.black26),
+                  ),
+                ),
+                margin: const EdgeInsets.all(30),
+                padding: const EdgeInsets.all(30),
+                child: Text(rank?.name ?? "", style: Theme.of(context).textTheme.headlineMedium,),
+              ),
+              Padding(padding: EdgeInsets.only(right: 20, left: 20),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                  const BorderRadius.all(Radius.circular(12)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          topRight: Radius.circular(5),
+                        ),
+                      ),
+                      child: Text(
+                        "獲得ポイント",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Container(
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(5),
+                          bottomRight: Radius.circular(5),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset("assets/images/point_brown.png"),
+                          Row(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "${rank?.point}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  child: Text(
+                                    "pt",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge,
+                                  ),
+                                )
+                              ])
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+    Padding(padding: EdgeInsets.only(right: 20, left: 20),
+    child:
+
+              Row(
+                children: [
+                  Expanded(
+                    child:               Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                        const BorderRadius.all(Radius.circular(12)),
+                      ),
+                      child: Column(children: [
+                        Icon(Icons.check, color: Theme.of(context).colorScheme.primary, size: 50,),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children:[
+                              Text("達成数 "),
+                              Text("${rank?.done}")
+                            ])
+                      ],),
+                    ),
+                  ),
+                  Expanded(
+                    child:               Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                        const BorderRadius.all(Radius.circular(12)),
+                      ),
+                      child: Column(children: [
+                        Icon(Icons.check, color: Theme.of(context).colorScheme.primary, size: 50,),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children:[
+                              Text("ランキング "),
+                              Text("${rank?.ranking}"),
+                              Text("位"),
+                            ])
+                      ],),
+                    ),
+                  )
+
+    ],))
+            ]
         ),
     );
   }
