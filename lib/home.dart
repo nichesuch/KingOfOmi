@@ -27,37 +27,78 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body: Column(
-        children: [
-          Padding(padding: EdgeInsets.all(50)),
-          Expanded(child: Image.asset("assets/images/logo.png", scale: 0.5,)),
-          Expanded(child: Row(
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      body: Column(children: [
+        Padding(padding: EdgeInsets.all(50)),
+        Expanded(
+            child: Image.asset(
+          "assets/images/logo.png",
+          scale: 0.5,
+        )),
+        Expanded(
+            child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            Expanded(child: Padding(padding: EdgeInsets.all(10), child:
-            ElevatedButton(onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-                return MyHomePage(selectedIndex: 4,);
-              }));
-            },
-                child:Padding(padding: EdgeInsets.all(10).copyWith(top: 50), child:  const Text("クエストを\n登録する", textAlign: TextAlign.center,
-                ))))),
-              Expanded(child: Padding(padding: EdgeInsets.all(10), child:
-              ElevatedButton(onPressed: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-                  return MyHomePage(selectedIndex: 1,);
-                }));
-              },
-                  child:Padding(padding: EdgeInsets.all(10).copyWith(top: 50), child:  const Text("クエストに\n参加する", textAlign: TextAlign.center,
-                  ))))),
-          ],))
-        ]
-      ),
+          children: [
+            Expanded(
+                child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) {
+                            return MyHomePage(
+                              selectedIndex: 4,
+                            );
+                          }));
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white),
+                        child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset("assets/images/list.png", height: 70,),
+                                Padding(padding: EdgeInsets.all(10)),
+                                const Text(
+                                  "クエストを\n登録する",
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ))))),
+            Expanded(
+                child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) {
+                            return MyHomePage(
+                              selectedIndex: 1,
+                            );
+                          }));
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white),
+                        child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset("assets/images/omi_icon_sanka.png", height: 70,),
+                                Padding(padding: EdgeInsets.all(10)),
+                                const Text(
+                                  "クエストに\n参加する",
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ))))),
+          ],
+        ))
+      ]),
     );
   }
 }

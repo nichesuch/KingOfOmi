@@ -191,7 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(height: 30,width: 50,),
                   IconButton(
                     icon: Icon(
-                      Icons.star,
+                      Icons.workspace_premium,
                       color: _selectedIndex == 2 ? Theme.of(context).colorScheme.primary : Colors.black45,
                     ),
                     onPressed: () {

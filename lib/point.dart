@@ -171,7 +171,7 @@ class _PointPageState extends State<PointPage> {
                         const BorderRadius.all(Radius.circular(12)),
                       ),
                       child: Column(children: [
-                        Icon(Icons.check, color: Theme.of(context).colorScheme.primary, size: 50,),
+                        Icon(Icons.workspace_premium, color: Theme.of(context).colorScheme.primary, size: 50,),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children:[
