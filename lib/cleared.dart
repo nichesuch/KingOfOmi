@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:king_of_omi/home.dart';
+import 'package:king_of_omi/main.dart';
 import 'package:king_of_omi/map.dart';
 import 'package:king_of_omi/quest.dart';
 import 'package:latlong2/latlong.dart';
@@ -22,35 +25,27 @@ class _ClearedPageState extends State<ClearedPage> {
   bool isActive = false;
   bool canClear = false;
   double radius = 0.0001;
-  late StreamSubscription streamSubscription;
-  MaterialStatesController statesController = MaterialStatesController();
+
+  int point = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    streamSubscription = Geolocator.getPositionStream().listen((position) {
-      LatLng loc1 =
-      LatLng(position.latitude - radius, position.longitude - radius);
-      LatLng loc2 =
-      LatLng(position.latitude + radius, position.longitude + radius);
+    FirebaseFirestore.instance
+        .collection("points")
+        .doc("ceMFj61EBSe3S77F7WBk")
+        .get()
+        .then((data) {
       setState(() {
-        canClear = LatLngBounds(loc1, loc2).contains(widget.quest.location);
-        if (canClear) {
-          print("can Clear");
-          statesController.update(MaterialState.disabled, true);
-        } else {
-          print("NO Clear");
-          statesController.update(MaterialState.focused, false);
-        }
+        point = data.data()!["point"];
       });
     });
   }
 
   @override
   void dispose() {
-    streamSubscription.cancel();
     super.dispose();
   }
 
@@ -99,7 +94,8 @@ class _ClearedPageState extends State<ClearedPage> {
                                   height: 40,
                                 )),
                             Container(
-                              padding: const EdgeInsets.all(8).copyWith(bottom: 20),
+                              padding:
+                                  const EdgeInsets.all(8).copyWith(bottom: 20),
                               decoration: BoxDecoration(
                                   color: Colors.white, shape: BoxShape.circle),
                               child: Image.asset("assets/images/logo.png"),
@@ -121,60 +117,162 @@ class _ClearedPageState extends State<ClearedPage> {
                         style: Theme.of(context).textTheme.headlineMedium,
                         textAlign: TextAlign.center,
                       ),
-
-                      const Padding(
-                          padding: EdgeInsets.only(top: 5, bottom: 5),
-                          child: Text("ポイント獲得条件")),
-                      Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(width: 2.0, color: Colors.black45),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            width: 2,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(12)),
                         ),
-                        padding: const EdgeInsets.only(top: 5, bottom: 5),
-                        child: const Text("スマホを持って現地を訪問する"),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(5),
+                                  topRight: Radius.circular(5),
+                                ),
+                              ),
+                              child: Text(
+                                "獲得ポイント",
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Container(
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(5),
+                                  bottomRight: Radius.circular(5),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset("assets/images/point_brown.png"),
+                                  Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          "${widget.quest.point}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displayMedium,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(bottom: 10),
+                                          child: Text(
+                                            "pt",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge,
+                                          ),
+                                        )
+                                      ])
+                                ],
+                              ),
+                            ),
+                            Container(
+                                decoration: const BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                        width: 1.0, color: Colors.black45),
+                                  ),
+                                ),
+                                margin: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text("総ポイント"),
+                                    Text("${point}pt"),
+                                  ],
+                                )),
+                          ],
+                        ),
                       ),
-
-                      const Padding(
-                          padding: EdgeInsets.only(top: 5, bottom: 5),
-                          child: Text("クエスト作成者")),
-                      Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(width: 2.0, color: Colors.black45),
+                      Row(children: [
+                      ElevatedButton(
+                      child: Padding(padding:EdgeInsets.all(5), child: const Icon(Icons.person_outlined, size: 40,)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape:  CircleBorder(
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 1,
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {},
+                ),
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                              width: 2,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            borderRadius:
+                            const BorderRadius.all(Radius.circular(12)),
                           ),
+                          child: SizedBox(height: 100, width:150, child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text("私に聞いてください!",style: Theme.of(context).textTheme.bodySmall),
+                              Text(widget.quest.createdUser+"さん", style: Theme.of(context).textTheme.headlineSmall,),
+                            ],
+                          )),
                         ),
-                        padding: const EdgeInsets.only(top: 5, bottom: 5),
-                        child: Text(widget.quest.createdUser),
-                      ),
-                      Padding(padding: EdgeInsets.all(30), child:
-                      !isActive
-                          ? ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              isActive = !isActive;
-                            });
-                          },
-                          child: const Padding(
-                              padding: EdgeInsets.all(10), child: Text("クエストに参加する", style: TextStyle(color: Colors.white, fontSize: 18),)))
-                          : ElevatedButton(
-                          onPressed: canClear
-                              ? () {
-                            if (canClear) {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(builder: (context) {
-                                    return ClearedPage(
-                                        title: "クエスト達成", quest: widget.quest);
-                                  }));
-                            }
-                          }
-                              : null,
-                          child: const Padding(
-                              padding: EdgeInsets.all(10), child: Text("達成")))
-                      )
+
+                      ],),
                     ],
                   ),
                 ),
+
+                Padding(
+                    padding: EdgeInsets.all(10),
+                    child:
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              "他のクエストに参加する",
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 15),
+                            )))
+                ),
+                Padding(
+                    padding: EdgeInsets.all(10),
+                    child:
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(0);
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+                            return MyHomePage(selectedIndex: 0);
+                          }));
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white),
+                        child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              "ホームに戻る",
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor, fontSize: 18),
+                            )))
+                )
               ],
             ),
           ],
