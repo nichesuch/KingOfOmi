@@ -8,11 +8,13 @@ class MapView extends StatefulWidget {
       {super.key,
       this.mapController,
       this.showMyLocation = true,
+        this.canControl = true,
       this.location});
 
   MapController? mapController;
   bool showMyLocation;
   LatLng? location;
+  bool canControl;
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -28,6 +30,13 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
+  Marker now = Marker(
+    point: LatLng(36.569537, 137.383705),
+    width: 80,
+    height: 80,
+    builder: (context) => Icon(Icons.accessibility, color: Theme.of(context).colorScheme.primary, size: 30,),
+  );
+
   /// Determine the current position of the device.
   ///
   /// When the location services are not enabled or permissions
@@ -74,8 +83,18 @@ class _MapViewState extends State<MapView> {
     super.initState();
     widget.mapController ??= MapController();
     if (widget.showMyLocation) {
-      _determinePosition().then((value) => widget.mapController
-          ?.move(LatLng(value.latitude, value.longitude), 16));
+      _determinePosition().then((value){
+        widget.mapController
+            ?.move(LatLng(value.latitude, value.longitude), 16);
+        setState(() {
+          now = Marker(
+            point: LatLng(value.latitude, value.longitude),
+            width: 80,
+            height: 80,
+            builder: (context) => Icon(Icons.accessibility, color: Theme.of(context).colorScheme.primary, size: 30,),
+          );
+        });
+      });
     }
   }
 
@@ -87,12 +106,14 @@ class _MapViewState extends State<MapView> {
       options: MapOptions(
         center: widget.location ?? LatLng(36.569537, 137.383705),
         zoom: 16,
+        interactiveFlags: widget.canControl ? InteractiveFlag.all : InteractiveFlag.none,
       ),
       nonRotatedChildren: [
         AttributionWidget.defaultWidget(
           source: 'OpenStreetMap contributors',
           onSourceTapped: null,
         ),
+        if(widget.canControl)
         FloatingActionButton(
             heroTag: "myLocation",
             mini: true,
@@ -106,6 +127,17 @@ class _MapViewState extends State<MapView> {
         TileLayer(
           urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
           userAgentPackageName: 'org.code4sake.king_of_omi',
+        ),
+        MarkerLayer(
+          markers: [
+            if(widget.location != null) Marker(
+              point: widget.location ?? LatLng(36.569537, 137.383705),
+              width: 80,
+              height: 80,
+              builder: (context) => Icon(Icons.pin_drop, color: Theme.of(context).colorScheme.primary, size: 50,),
+            ),
+            now
+          ],
         ),
       ],
     ));

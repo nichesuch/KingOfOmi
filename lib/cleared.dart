@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -56,15 +57,10 @@ class _ClearedPageState extends State<ClearedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.quest.title),
-      ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
+        child: Stack(
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
@@ -79,38 +75,108 @@ class _ClearedPageState extends State<ClearedPage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Expanded(
-                child: MapView(
-                    mapController: mapController,
-                    showMyLocation: false,
-                    location: widget.quest.location)),
-            Expanded(
-              child: ListView(
-                children: [
-                  const Text("クエスト詳細"),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Text(widget.quest.description),
-                  )
-                ],
-              ),
+            widget.quest.image.first,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: [
+                    SizedBox(
+                        height: 100,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          alignment: AlignmentDirectional.bottomCenter,
+                          children: [
+                            Positioned(
+                                bottom: 0,
+                                left: 30,
+                                right: 30,
+                                child: Container(
+                                  color: Colors.white,
+                                  height: 40,
+                                )),
+                            Container(
+                              padding: const EdgeInsets.all(8).copyWith(bottom: 20),
+                              decoration: BoxDecoration(
+                                  color: Colors.white, shape: BoxShape.circle),
+                              child: Image.asset("assets/images/logo.png"),
+                            ),
+                          ],
+                        )),
+                  ],
+                ),
+                Container(
+                  margin: const EdgeInsets.only(right: 30, left: 30),
+                  padding: const EdgeInsets.only(right: 30, left: 30),
+                  color: Colors.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Image.asset("assets/images/clear.png"),
+                      Text(
+                        "「${widget.quest.title}」",
+                        style: Theme.of(context).textTheme.headlineMedium,
+                        textAlign: TextAlign.center,
+                      ),
+
+                      const Padding(
+                          padding: EdgeInsets.only(top: 5, bottom: 5),
+                          child: Text("ポイント獲得条件")),
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(width: 2.0, color: Colors.black45),
+                          ),
+                        ),
+                        padding: const EdgeInsets.only(top: 5, bottom: 5),
+                        child: const Text("スマホを持って現地を訪問する"),
+                      ),
+
+                      const Padding(
+                          padding: EdgeInsets.only(top: 5, bottom: 5),
+                          child: Text("クエスト作成者")),
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(width: 2.0, color: Colors.black45),
+                          ),
+                        ),
+                        padding: const EdgeInsets.only(top: 5, bottom: 5),
+                        child: Text(widget.quest.createdUser),
+                      ),
+                      Padding(padding: EdgeInsets.all(30), child:
+                      !isActive
+                          ? ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              isActive = !isActive;
+                            });
+                          },
+                          child: const Padding(
+                              padding: EdgeInsets.all(10), child: Text("クエストに参加する", style: TextStyle(color: Colors.white, fontSize: 18),)))
+                          : ElevatedButton(
+                          onPressed: canClear
+                              ? () {
+                            if (canClear) {
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(builder: (context) {
+                                    return ClearedPage(
+                                        title: "クエスト達成", quest: widget.quest);
+                                  }));
+                            }
+                          }
+                              : null,
+                          child: const Padding(
+                              padding: EdgeInsets.all(10), child: Text("達成")))
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
-            !isActive
-                ? ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    isActive = !isActive;
-                  });
-                },
-                child: const Padding(
-                    padding: EdgeInsets.all(10), child: Text("挑戦")))
-                : ElevatedButton(
-                statesController: statesController,
-                onPressed: () {},
-                child: const Padding(
-                    padding: EdgeInsets.all(10), child: Text("達成")))
           ],
         ),
       ),

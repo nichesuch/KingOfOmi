@@ -47,6 +47,7 @@ class _DetailPageState extends State<DetailPage> {
       carousel.add(MapView(
           mapController: mapController,
           showMyLocation: false,
+          canControl: false,
           location: widget.quest.location));
     });
   }
@@ -79,7 +80,7 @@ class _DetailPageState extends State<DetailPage> {
                 CarouselSlider(
                   options: CarouselOptions(
                       height: 350,
-                      viewportFraction: 0.9,
+                      viewportFraction: 1,
                       enableInfiniteScroll: false),
                   items: carousel,
                 ),
@@ -192,7 +193,7 @@ class _DetailPageState extends State<DetailPage> {
                       child: const Padding(
                           padding: EdgeInsets.all(10), child: Text("クエストに参加する", style: TextStyle(color: Colors.white, fontSize: 18),)))
                       : ElevatedButton(
-                      onPressed: !canClear
+                      onPressed: canClear
                           ? () {
                         if (canClear) {
                           Navigator.of(context).pushReplacement(
