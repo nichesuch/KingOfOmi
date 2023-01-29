@@ -104,24 +104,32 @@ class _RankingPageState extends State<RankingPage> {
                                       side: BorderSide.none),
                                   margin: const EdgeInsets.all(10),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         e.key < 5
-                                                ? Image.asset(
-                                                    "assets/images/${e.key + 1}_ranking.png",
-                                                    width: 70,
-                                                    height: 70)
-                                                : const SizedBox(
-                                                    width: 70,
-                                                    height: 70,
-                                                  ),
+                                            ? Image.asset(
+                                                "assets/images/${e.key + 1}_ranking.png",
+                                                width: 70,
+                                                height: 70)
+                                            : const SizedBox(
+                                                width: 70,
+                                                height: 70,
+                                              ),
                                         ElevatedButton(
-                                          child: Padding(padding:EdgeInsets.all(5), child: const Icon(Icons.person_outlined, size: 30,)),
+                                          child: Padding(
+                                              padding: EdgeInsets.all(5),
+                                              child: const Icon(
+                                                Icons.person_outlined,
+                                                size: 30,
+                                              )),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.white,
-                                            shape:  CircleBorder(
+                                            shape: CircleBorder(
                                               side: BorderSide(
-                                                color: Theme.of(context).colorScheme.primary,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
                                                 width: 1,
                                                 style: BorderStyle.solid,
                                               ),
@@ -130,21 +138,26 @@ class _RankingPageState extends State<RankingPage> {
                                           onPressed: () {},
                                         ),
                                         Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10),
+                                            padding:
+                                                const EdgeInsets.only(left: 10),
                                             child: Column(
                                               children: [
                                                 Text(e.value.name,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headlineMedium?.copyWith(color: Theme.of(context).colorScheme.primary)),
+                                                    overflow: TextOverflow.fade,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headlineMedium
+                                                        ?.copyWith(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .primary)),
                                                 Text("${e.value.point}pt",
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .bodyMedium)
                                               ],
                                             ))
-
                                       ])),
                             ))
                         .toList(),
