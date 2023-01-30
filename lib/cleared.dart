@@ -131,11 +131,12 @@ class _ClearedPageState extends State<ClearedPage> {
                           children: [
                             Container(
                               height: 30,
+                              padding: EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).colorScheme.primary,
                                 borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  topRight: Radius.circular(5),
+                                  topLeft: Radius.circular(12),
+                                  topRight: Radius.circular(12),
                                 ),
                               ),
                               child: Text(
@@ -194,7 +195,7 @@ class _ClearedPageState extends State<ClearedPage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text("総ポイント"),
-                                    Text("${point}pt"),
+                                    Text("${widget.quest.point + point}pt"),
                                   ],
                                 )),
                           ],
@@ -228,7 +229,7 @@ class _ClearedPageState extends State<ClearedPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text("私に聞いてください!",style: Theme.of(context).textTheme.bodySmall),
-                              Text(widget.quest.createdUser+"さん", style: Theme.of(context).textTheme.headlineSmall,),
+                              Text(widget.quest.createdUser+"さん", style: Theme.of(context).textTheme.titleMedium,),
                             ],
                           )),
                         ),

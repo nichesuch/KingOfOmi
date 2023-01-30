@@ -9,6 +9,7 @@ import 'package:king_of_omi/cleared.dart';
 import 'package:king_of_omi/map.dart';
 import 'package:king_of_omi/quest.dart';
 import 'package:latlong2/latlong.dart';
+import 'active.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key, required this.title, required this.quest});
@@ -186,9 +187,11 @@ class _DetailPageState extends State<DetailPage> {
                   !isActive
                       ? ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          isActive = !isActive;
-                        });
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) {
+                                return ActivePage(
+                                    title: "クエスト中", quest: widget.quest);
+                              }));
                       },
                       child: const Padding(
                           padding: EdgeInsets.all(10), child: Text("クエストに参加する", style: TextStyle(color: Colors.white, fontSize: 18),)))
@@ -205,7 +208,7 @@ class _DetailPageState extends State<DetailPage> {
                       }
                           : null,
                       child: const Padding(
-                          padding: EdgeInsets.all(10), child: Text("達成")))
+                          padding: EdgeInsets.all(10), child: Text("クエストに参加中")))
                   )
                 ],
               ),

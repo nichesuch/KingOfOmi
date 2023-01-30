@@ -84,6 +84,7 @@ class _MapViewState extends State<MapView> {
     widget.mapController ??= MapController();
     if (widget.showMyLocation) {
       _determinePosition().then((value){
+        if(value.latitude == null || value.longitude == null) return;
         widget.mapController
             ?.move(LatLng(value.latitude, value.longitude), 16);
         setState(() {

@@ -89,11 +89,12 @@ class _PointPageState extends State<PointPage> {
                   children: [
                     Container(
                       height: 30,
+                      padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.primary,
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5),
-                          topRight: Radius.circular(5),
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
                         ),
                       ),
                       child: Text(
